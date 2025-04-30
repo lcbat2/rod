@@ -140,7 +140,9 @@ func (cdp *Client) consumeMessages() {
 			})
 			return
 		}
-
+		if data == nil || len(data) == 0 {
+			continue
+		}
 		var id struct {
 			ID int `json:"id"`
 		}
