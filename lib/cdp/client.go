@@ -4,6 +4,7 @@ package cdp
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"sync"
 	"sync/atomic"
 
@@ -147,12 +148,22 @@ func (cdp *Client) consumeMessages() {
 			ID int `json:"id"`
 		}
 		err = json.Unmarshal(data, &id)
-		utils.E(err)
+		//utils.E(err)
+		if err != nil {
+			cdp.logger.Println("cdp json.Unmarshal error:", err, string(data))
+			fmt.Println("cdp json.Unmarshal error:", err, string(data))
+			continue
+		}
 
 		if id.ID == 0 {
 			var evt Event
 			err := json.Unmarshal(data, &evt)
-			utils.E(err)
+			//utils.E(err)
+			if err != nil {
+				cdp.logger.Println("cdp json.Unmarshal error:", err, string(data))
+				fmt.Println("cdp json.Unmarshal error:", err, string(data))
+				continue
+			}
 			cdp.logger.Println(&evt)
 			cdp.event <- &evt
 			continue
@@ -160,7 +171,12 @@ func (cdp *Client) consumeMessages() {
 
 		var res Response
 		err = json.Unmarshal(data, &res)
-		utils.E(err)
+		//utils.E(err)
+		if err != nil {
+			cdp.logger.Println("cdp json.Unmarshal error:", err, string(data))
+			fmt.Println("cdp json.Unmarshal error:", err, string(data))
+			continue
+		}
 
 		cdp.logger.Println(&res)
 
